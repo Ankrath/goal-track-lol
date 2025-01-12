@@ -47,48 +47,32 @@ const Widget = ({ stats, goalRank, goalDivision }) => {
   const progress = calculateProgress();
 
   return (
-    <div
-      className='w-96 text-white rounded-lg shadow-lg'
-      style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-      }}
-    >
-      <div className='p-4'>
-        <div className='flex gap-4'>
-          <div className='w-16 h-16 bg-black rounded-lg flex items-center justify-center'>
+    <div className='w-96 text-white rounded-lg shadow-lg bg-black/40'>
+      <div className='p-3'>
+        <div className='flex gap-3 mb-2'>
+          <div className='w-12 h-12 bg-black/40 rounded flex items-center justify-center'>
             <span className='text-gray-400'>Rank</span>
           </div>
 
-          <div className='flex-1'>
-            <div className='flex justify-between items-center mb-1'>
-              <div className='text-xl font-bold'>
-                {stats?.tier} {stats?.rank}
-              </div>
-              <div className='text-blue-400 font-semibold'>
-                {stats?.leaguePoints} LP
-              </div>
+          <div>
+            <div className='text-lg font-bold leading-tight'>
+              {stats?.tier} {stats?.rank} {stats?.leaguePoints}LP
             </div>
 
-            <div className='flex gap-4 text-sm mb-4 text-gray-300'>
-              <span>W: {stats?.wins || 0}</span>
-              <span>L: {stats?.losses || 0}</span>
-              <span>WR: {winRate}%</span>
-            </div>
-
-            <div className='flex justify-between text-sm text-gray-400 mb-1'>
-              <span>
-                Road to {goalRank} {goalDivision}
-              </span>
-              <span>{progress.toFixed(1)}%</span>
-            </div>
-
-            <div className='w-full bg-slate-700 rounded-full h-1.5'>
-              <div
-                className='bg-blue-400 h-1.5 rounded-full transition-all duration-500'
-                style={{ width: `${progress}%` }}
-              ></div>
+            <div className='text-sm text-gray-200'>
+              W: {stats?.wins || 0} L: {stats?.losses || 0} WR: {winRate}%
             </div>
           </div>
+        </div>
+
+        <div className='text-xs text-gray-300 mb-1'>
+          Road to {goalRank} {goalDivision} ({progress.toFixed(1)}%)
+        </div>
+        <div className='w-full bg-black/40 rounded-full h-1'>
+          <div
+            className='bg-blue-400 h-1 rounded-full transition-all duration-500'
+            style={{ width: `${progress}%` }}
+          ></div>
         </div>
       </div>
     </div>
