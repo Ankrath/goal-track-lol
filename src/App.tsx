@@ -1,13 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Widget from './components/Widget';
 
 const App = () => {
+  const [rankedStats, setRankedStats] = useState([]);
+
+  const goalRank = 'GOLD';
+  const goalDivision = 'IV';
+
   useEffect(() => {
     const fetchPlayerData = async () => {
       try {
         console.log('Fetching data at:', new Date().toLocaleTimeString());
 
         const summonerResponse = await fetch(
-          `http://localhost:3001/summoner/Lurox/Lurox/EUW`,
+          `http://localhost:3001/summoner/Shessair/EUW/EUW`,
         );
         const summonerData = await summonerResponse.json();
         console.log('Summoner Data:', summonerData);
@@ -18,6 +24,7 @@ const App = () => {
           );
           const rankedData = await rankedResponse.json();
           console.log('Ranked Data:', rankedData);
+          setRankedStats(rankedData[0]);
 
           const gameResponse = await fetch(
             `http://localhost:3001/active-game/${summonerData.puuid}/EUW`,
@@ -36,6 +43,7 @@ const App = () => {
       }
       return 10 * 60 * 1000;
     };
+
     const setupInterval = async () => {
       const interval = await fetchPlayerData();
       return setInterval(fetchPlayerData, interval);
@@ -52,6 +60,11 @@ const App = () => {
   return (
     <div>
       <h1>App</h1>
+      <Widget
+        stats={rankedStats}
+        goalRank={goalRank}
+        goalDivision={goalDivision}
+      />
     </div>
   );
 };
