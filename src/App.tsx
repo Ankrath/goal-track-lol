@@ -1,19 +1,30 @@
 import { useEffect, useState } from 'react';
 import Widget from './components/Widget';
+import SummonerForm from './components/SummonerForm';
+import { SummonerFormData } from './types/form';
 
 const App = () => {
   const [rankedStats, setRankedStats] = useState([]);
   const [summonerId, setSummonerId] = useState<string | null>(null);
   const [puuid, setPuuid] = useState<string | null>(null);
+  const [summonerInfo, setSummonerInfo] = useState<SummonerFormData | null>(
+    null,
+  );
 
   const goalRank = 'PLATINUM';
   const goalDivision = 'IV';
 
+  const handleSubmit = (data: SummonerFormData) => {
+    setSummonerInfo(data);
+  };
+
   useEffect(() => {
+    if (!summonerInfo) return;
+
     const fetchInitialData = async () => {
       try {
         const summonerResponse = await fetch(
-          `http://localhost:3001/summoner/Aircoots/PRIME/NA`,
+          `http://localhost:3001/summoner/${summonerInfo.summonerName}/${summonerInfo.tag}/${summonerInfo.server}`,
         );
         const summonerData = await summonerResponse.json();
         console.log('Initial Summoner Data:', summonerData);
@@ -34,13 +45,13 @@ const App = () => {
         console.log('Fetching updates at:', new Date().toLocaleTimeString());
 
         const gameResponse = await fetch(
-          `http://localhost:3001/active-game/${puuid}/NA`,
+          `http://localhost:3001/active-game/${puuid}/${summonerInfo.server}`,
         );
         const gameData = await gameResponse.json();
         console.log('Game Status:', gameData);
 
         const rankedResponse = await fetch(
-          `http://localhost:3001/ranked/${id}/NA`,
+          `http://localhost:3001/ranked/${id}/${summonerInfo.server}`,
         );
         const rankedData = await rankedResponse.json();
         console.log('Ranked Data:', rankedData);
@@ -73,15 +84,18 @@ const App = () => {
     };
 
     setupPolling();
-  }, []);
+  }, [summonerInfo]);
 
   return (
     <div className='m-10'>
-      <Widget
-        stats={rankedStats}
-        goalRank={goalRank}
-        goalDivision={goalDivision}
-      />
+      <SummonerForm onSubmit={handleSubmit} />
+      {rankedStats && (
+        <Widget
+          stats={rankedStats}
+          goalRank={goalRank}
+          goalDivision={goalDivision}
+        />
+      )}
     </div>
   );
 };
