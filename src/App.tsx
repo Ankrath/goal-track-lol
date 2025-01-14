@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Widget from './components/Widget';
 import SummonerForm from './components/SummonerForm';
-import { SummonerFormData } from './types/form';
+import { SummonerFormData } from './types/formSchema';
 
 const App = () => {
   const [rankedStats, setRankedStats] = useState([]);

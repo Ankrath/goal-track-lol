@@ -18,8 +18,14 @@ const divisionOrder = {
   I: 3,
 };
 
-const Widget = ({ stats, goalRank, goalDivision }) => {
-  // console.log('stats', stats);
+type WidgetProps = {
+  stats: []; // Add the proper stats format here
+  goalRank: string;
+  goalDivision: string;
+};
+
+const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
+  console.log('stats', stats);
 
   const winRate =
     stats?.wins && stats?.losses

@@ -4,7 +4,7 @@ import {
   SummonerFormData,
   summonerFormSchema,
   serverOptions,
-} from '../types/form';
+} from '../types/formSchema';
 
 type SummonerFormProps = {
   onSubmit: (data: SummonerFormData) => void;
