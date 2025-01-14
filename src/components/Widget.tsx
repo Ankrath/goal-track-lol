@@ -19,7 +19,7 @@ const divisionOrder = {
 };
 
 const Widget = ({ stats, goalRank, goalDivision }) => {
-  console.log('stats', stats);
+  // console.log('stats', stats);
 
   const winRate =
     stats?.wins && stats?.losses
