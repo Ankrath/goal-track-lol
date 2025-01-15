@@ -35,7 +35,7 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
 
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
           <div className='space-y-1'>
-            <label className='block text-sm font-medium text-gray-300'>
+            <label className='block text-base font-medium text-gray-300'>
               Summoner Name
             </label>
             <input
@@ -51,7 +51,7 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
           </div>
 
           <div className='space-y-1'>
-            <label className='block text-sm font-medium text-gray-300'>
+            <label className='block text-base font-medium text-gray-300'>
               Tag
             </label>
             <input
@@ -65,7 +65,7 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
           </div>
 
           <div className='space-y-1'>
-            <label className='block text-sm font-medium text-gray-300'>
+            <label className='block text-base font-medium text-gray-300'>
               Server
             </label>
             <select
@@ -83,9 +83,9 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
             )}
           </div>
 
-          <div className='space-y-1'>
-            <label className='block text-sm font-medium text-gray-300'>
-              Goal Rank
+          <div className='space-y-1 pb-4'>
+            <label className='block text-base font-medium text-gray-300'>
+              Goal
             </label>
             <select
               {...register('goalRank')}
@@ -104,7 +104,7 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
 
           <button
             type='submit'
-            className='w-full mt-6 bg-blue-600 text-white py-2.5 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200'
+            className='w-full bg-blue-600 text-white py-2.5 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200'
           >
             Track Summoner
           </button>
