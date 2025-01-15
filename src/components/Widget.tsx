@@ -1,4 +1,6 @@
-const rankOrder = {
+import { Rank, Division, rankedStats } from '../types/summonerData';
+
+const rankOrder: Record<Rank, number> = {
   IRON: 0,
   BRONZE: 1,
   SILVER: 2,
@@ -11,7 +13,7 @@ const rankOrder = {
   CHALLENGER: 9,
 };
 
-const divisionOrder = {
+const divisionOrder: Record<Division, number> = {
   IV: 0,
   III: 1,
   II: 2,
@@ -19,9 +21,9 @@ const divisionOrder = {
 };
 
 type WidgetProps = {
-  stats: []; // Add the proper stats format here
-  goalRank: string;
-  goalDivision: string;
+  stats: rankedStats;
+  goalRank: Rank;
+  goalDivision: Division;
 };
 
 const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
@@ -53,30 +55,30 @@ const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
   const progress = calculateProgress();
 
   return (
-    <div className='w-96 text-white rounded-lg shadow-lg bg-black/40'>
-      <div className='p-3'>
-        <div className='flex gap-3 mb-2'>
-          <div className='w-12 h-12 bg-black/40 rounded flex items-center justify-center'>
-            <span className='text-gray-400'>Rank</span>
+    <div className='w-96 text-white rounded-lg shadow-lg bg-gray-800'>
+      <div className='p-4'>
+        <div className='flex gap-4 mb-4'>
+          <div className='w-12 h-12 bg-gray-700 rounded-md flex items-center justify-center'>
+            <span className='text-gray-300'>Rank</span>
           </div>
 
           <div>
-            <div className='text-lg font-bold leading-tight'>
+            <div className='text-lg font-bold leading-tight text-gray-100'>
               {stats?.tier} {stats?.rank} {stats?.leaguePoints}LP
             </div>
 
-            <div className='text-sm text-gray-200'>
+            <div className='text-sm text-gray-300'>
               W: {stats?.wins || 0} L: {stats?.losses || 0} WR: {winRate}%
             </div>
           </div>
         </div>
 
-        <div className='text-xs text-gray-300 mb-1'>
+        <div className='text-sm text-gray-400 mb-2'>
           Road to {goalRank} {goalDivision} ({progress.toFixed(1)}%)
         </div>
-        <div className='w-full bg-black/40 rounded-full h-1'>
+        <div className='w-full bg-gray-700 rounded-full h-1.5'>
           <div
-            className='bg-blue-400 h-1 rounded-full transition-all duration-500'
+            className='bg-blue-500 h-1.5 rounded-full transition-all duration-500'
             style={{ width: `${progress}%` }}
           ></div>
         </div>

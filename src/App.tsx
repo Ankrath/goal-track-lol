@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import Widget from './components/Widget';
 import SummonerForm from './components/SummonerForm';
 import { SummonerFormData } from './types/formSchema';
+import { rankedStats } from './types/summonerData';
 
 const App = () => {
-  const [rankedStats, setRankedStats] = useState([]);
-  const [summonerId, setSummonerId] = useState<string | null>(null);
-  const [puuid, setPuuid] = useState<string | null>(null);
+  const [rankedStats, setRankedStats] = useState<rankedStats | null>(null);
   const [summonerInfo, setSummonerInfo] = useState<SummonerFormData | null>(
     null,
   );
@@ -30,8 +29,6 @@ const App = () => {
         console.log('Initial Summoner Data:', summonerData);
 
         if (summonerData.id && summonerData.puuid) {
-          setSummonerId(summonerData.id);
-          setPuuid(summonerData.puuid);
           return { id: summonerData.id, puuid: summonerData.puuid };
         }
       } catch (error) {
@@ -87,15 +84,20 @@ const App = () => {
   }, [summonerInfo]);
 
   return (
-    <div className='m-10'>
-      <SummonerForm onSubmit={handleSubmit} />
-      {rankedStats && (
-        <Widget
-          stats={rankedStats}
-          goalRank={goalRank}
-          goalDivision={goalDivision}
-        />
-      )}
+    <div className='min-h-screen bg-gray-900 pt-10'>
+      <div className='container mx-auto px-4'>
+        <SummonerForm onSubmit={handleSubmit} />
+
+        {rankedStats && (
+          <div className='flex justify-center mt-6'>
+            <Widget
+              stats={rankedStats}
+              goalRank={goalRank}
+              goalDivision={goalDivision}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
