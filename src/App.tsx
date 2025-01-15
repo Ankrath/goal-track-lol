@@ -1,87 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Widget from './components/Widget';
 import SummonerForm from './components/SummonerForm';
 import { SummonerFormData } from './types/formSchema';
-import { rankedStats } from './types/summonerData';
+import { rankedStats, Rank, Division } from './types/summonerData';
+import { fetchSummonerData, setupPolling } from './utils/api';
 
 const App = () => {
   const [rankedStats, setRankedStats] = useState<rankedStats | null>(null);
   const [summonerInfo, setSummonerInfo] = useState<SummonerFormData | null>(
     null,
   );
+  const [goalRank, setGoalRank] = useState<Rank>('PLATINUM');
+  const [goalDivision, setGoalDivision] = useState<Division | null>('IV');
 
-  const goalRank = 'PLATINUM';
-  const goalDivision = 'IV';
-
-  const handleSubmit = (data: SummonerFormData) => {
+  const handleSubmit = async (data: SummonerFormData) => {
     setSummonerInfo(data);
+    const stats = await fetchSummonerData(
+      data.summonerName,
+      data.tag,
+      data.server,
+    );
+
+    const [rank, division] = data.goalRank.split(' ');
+
+    if (stats) {
+      setRankedStats(stats);
+      setupPolling(data.summonerName, data.tag, data.server, setRankedStats);
+      setGoalRank(rank as Rank);
+      setGoalDivision((division as Division) || null);
+    }
   };
 
-  useEffect(() => {
-    if (!summonerInfo) return;
+  const getWidgetUrl = () => {
+    if (!summonerInfo) return null;
 
-    const fetchInitialData = async () => {
-      try {
-        const summonerResponse = await fetch(
-          `http://localhost:3001/summoner/${summonerInfo.summonerName}/${summonerInfo.tag}/${summonerInfo.server}`,
-        );
-        const summonerData = await summonerResponse.json();
-        console.log('Initial Summoner Data:', summonerData);
+    const params = new URLSearchParams({
+      summonerName: summonerInfo.summonerName,
+      tag: summonerInfo.tag,
+      server: summonerInfo.server,
+      goalRank: summonerInfo.goalRank,
+    });
 
-        if (summonerData.id && summonerData.puuid) {
-          return { id: summonerData.id, puuid: summonerData.puuid };
-        }
-      } catch (error) {
-        console.error('Error fetching initial data:', error);
-      }
-      return null;
-    };
-
-    const fetchUpdates = async (id: string, puuid: string) => {
-      try {
-        console.log('Fetching updates at:', new Date().toLocaleTimeString());
-
-        const gameResponse = await fetch(
-          `http://localhost:3001/active-game/${puuid}/${summonerInfo.server}`,
-        );
-        const gameData = await gameResponse.json();
-        console.log('Game Status:', gameData);
-
-        const rankedResponse = await fetch(
-          `http://localhost:3001/ranked/${id}/${summonerInfo.server}`,
-        );
-        const rankedData = await rankedResponse.json();
-        console.log('Ranked Data:', rankedData);
-        setRankedStats(rankedData[0]);
-
-        if (gameData.inGame) {
-          console.log('Next update in: 5 minutes (in game)');
-          return 5 * 60 * 1000;
-        }
-
-        console.log('Next update in: 15 minutes (not in game)');
-        return 15 * 60 * 1000;
-      } catch (error) {
-        console.error('Error fetching updates:', error);
-        return 10 * 60 * 1000;
-      }
-    };
-
-    const setupPolling = async () => {
-      const initialData = await fetchInitialData();
-      if (!initialData) return;
-
-      const poll = async () => {
-        const interval = await fetchUpdates(initialData.id, initialData.puuid);
-        return setInterval(poll, interval);
-      };
-
-      const intervalId = await poll();
-      return () => clearInterval(intervalId);
-    };
-
-    setupPolling();
-  }, [summonerInfo]);
+    return `/widget?${params.toString()}`;
+  };
 
   return (
     <div className='min-h-screen bg-gray-900 pt-10'>
@@ -89,12 +51,43 @@ const App = () => {
         <SummonerForm onSubmit={handleSubmit} />
 
         {rankedStats && (
-          <div className='flex justify-center mt-6'>
-            <Widget
-              stats={rankedStats}
-              goalRank={goalRank}
-              goalDivision={goalDivision}
-            />
+          <div className='mt-8 space-y-6'>
+            <div className='flex justify-center'>
+              <Widget
+                stats={rankedStats}
+                goalRank={goalRank}
+                goalDivision={goalDivision}
+              />
+            </div>
+
+            <div className='flex flex-col items-center space-y-4'>
+              <p className='text-gray-300'>Widget URL:</p>
+              <div className='flex items-center gap-4'>
+                <input
+                  type='text'
+                  value={window.location.origin + getWidgetUrl()}
+                  className='bg-gray-800 text-gray-200 p-2 rounded-md w-96'
+                  readOnly
+                />
+                <button
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      window.location.origin + getWidgetUrl(),
+                    )
+                  }
+                  className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700'
+                >
+                  Copy URL
+                </button>
+              </div>
+              <Link
+                to={getWidgetUrl() || '#'}
+                target='_blank'
+                className='text-blue-400 hover:text-blue-300'
+              >
+                Open widget in new tab
+              </Link>
+            </div>
           </div>
         )}
       </div>

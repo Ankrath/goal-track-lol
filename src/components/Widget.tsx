@@ -23,12 +23,10 @@ const divisionOrder: Record<Division, number> = {
 type WidgetProps = {
   stats: rankedStats;
   goalRank: Rank;
-  goalDivision: Division;
+  goalDivision: Division | null;
 };
 
 const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
-  console.log('stats', stats);
-
   const winRate =
     stats?.wins && stats?.losses
       ? ((stats.wins / (stats.wins + stats.losses)) * 100).toFixed(1)
@@ -40,8 +38,14 @@ const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
     const currentRankValue = rankOrder[stats.tier];
     const goalRankValue = rankOrder[goalRank];
 
+    // If the goal rank is Master or above, we only compare ranks
+    if (['MASTER', 'GRANDMASTER', 'CHALLENGER'].includes(goalRank)) {
+      return (currentRankValue / goalRankValue) * 100;
+    }
+
+    // For other ranks, we include divisions in the calculation
     const currentDivisionValue = divisionOrder[stats.rank];
-    const goalDivisionValue = divisionOrder[goalDivision];
+    const goalDivisionValue = goalDivision ? divisionOrder[goalDivision] : 0;
 
     const totalSteps = goalRankValue * 4 + goalDivisionValue;
     const currentSteps = currentRankValue * 4 + currentDivisionValue;
@@ -55,7 +59,7 @@ const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
   const progress = calculateProgress();
 
   return (
-    <div className='w-96 text-white rounded-lg shadow-lg bg-gray-800'>
+    <div className='w-96 text-white rounded-lg shadow-lg bg-gray-800/70'>
       <div className='p-4'>
         <div className='flex gap-4 mb-4'>
           <div className='w-12 h-12 bg-gray-700 rounded-md flex items-center justify-center'>

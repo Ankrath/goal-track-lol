@@ -1,14 +1,19 @@
 import { z } from 'zod';
+import { generateRankOptions } from '../utils/ranks';
 
-export const serverOptions = ['NA', 'EUW', 'KR'] as const;
+export const serverOptions = ['NA', 'EUW', 'EUE', 'KR'] as const;
+
+const rankOptions = generateRankOptions();
 
 export const summonerFormSchema = z.object({
-  summonerName: z.string().min(1, 'Summoner name is required'),
-  tag: z
+  summonerName: z.string().min(3).max(16),
+  tag: z.string().min(3).max(5),
+  server: z.enum(serverOptions),
+  goalRank: z
     .string()
-    .min(1, 'Tag is required')
-    .max(5, 'Tag cannot exceed 5 characters'),
-  server: z.enum(serverOptions).default('NA'),
+    .refine(val => rankOptions.some(opt => opt.label === val), {
+      message: 'Please select a valid rank',
+    }),
 });
 
 export type SummonerFormData = z.infer<typeof summonerFormSchema>;
