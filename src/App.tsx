@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Widget from './components/Widget';
-import SummonerForm from './components/SummonerForm';
 import { SummonerFormData } from './types/formSchema';
 import { rankedStats, Rank, Division } from './types/summonerData';
 import { fetchSummonerData, setupPolling } from './utils/api';
+import Widget from './components/Widget';
+import SummonerForm from './components/SummonerForm';
 
 const App = () => {
   const [rankedStats, setRankedStats] = useState<rankedStats | null>(null);

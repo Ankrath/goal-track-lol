@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Widget from '../components/Widget';
 import { rankedStats, Rank, Division } from '../types/summonerData';
 import { fetchSummonerData, setupPolling } from '../utils/api';
+import Widget from '../components/Widget';
 
 const WidgetPage = () => {
   const [searchParams] = useSearchParams();

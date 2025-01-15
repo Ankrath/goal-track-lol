@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import {
   SummonerFormData,
   summonerFormSchema,
@@ -12,6 +13,7 @@ type SummonerFormProps = {
 };
 
 const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
+  const [isTracked, setIsTracked] = useState(false);
   const rankOptions = generateRankOptions();
 
   const {
@@ -26,6 +28,16 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
     },
   });
 
+  const handleFormSubmit = async (data: SummonerFormData) => {
+    setIsTracked(true);
+    onSubmit(data);
+
+    // Reset after 3 seconds
+    setTimeout(() => {
+      setIsTracked(false);
+    }, 3000);
+  };
+
   return (
     <div className='flex justify-center'>
       <div className='w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-lg'>
@@ -33,7 +45,7 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
           Track Summoner
         </h2>
 
-        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={handleSubmit(handleFormSubmit)} className='space-y-4'>
           <div className='space-y-1'>
             <label className='block text-base font-medium text-gray-300'>
               Summoner Name
@@ -104,9 +116,14 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
 
           <button
             type='submit'
-            className='w-full bg-blue-600 text-white py-2.5 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200'
+            disabled={isTracked}
+            className={`w-full py-2.5 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-300 ${
+              isTracked
+                ? 'bg-emerald-600 text-white cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
           >
-            Track Summoner
+            {isTracked ? 'Tracked!' : 'Track Summoner'}
           </button>
         </form>
       </div>

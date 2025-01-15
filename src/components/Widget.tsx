@@ -27,6 +27,8 @@ type WidgetProps = {
 };
 
 const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
+  console.log('stats', stats);
+
   const winRate =
     stats?.wins && stats?.losses
       ? ((stats.wins / (stats.wins + stats.losses)) * 100).toFixed(1)
