@@ -7,14 +7,16 @@ import {
   serverOptions,
 } from '../types/formSchema';
 import { generateRankOptions } from '../utils/ranks';
+import { Rank } from '../types/summonerData';
 
 type SummonerFormProps = {
   onSubmit: (data: SummonerFormData) => void;
+  currentRank?: Rank;
 };
 
-const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
+const SummonerForm = ({ onSubmit, currentRank }: SummonerFormProps) => {
   const [isTracked, setIsTracked] = useState(false);
-  const rankOptions = generateRankOptions();
+  const rankOptions = generateRankOptions(currentRank);
 
   const {
     register,
@@ -24,7 +26,7 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
     resolver: zodResolver(summonerFormSchema),
     defaultValues: {
       server: 'NA',
-      goalRank: 'PLATINUM IV',
+      goalRank: 'CHALLENGER',
     },
   });
 

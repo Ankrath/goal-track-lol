@@ -6,11 +6,8 @@ export type RankDivision = {
   label: string;
 };
 
-export const generateRankOptions = (): RankDivision[] => {
+export const generateRankOptions = (minimumRank?: Rank): RankDivision[] => {
   const ranks: Rank[] = [
-    'IRON',
-    'BRONZE',
-    'SILVER',
     'GOLD',
     'PLATINUM',
     'EMERALD',
@@ -20,9 +17,14 @@ export const generateRankOptions = (): RankDivision[] => {
     'CHALLENGER',
   ];
 
+  // Filter out ranks below it as well as the current rank
+  const filteredRanks = minimumRank
+    ? ranks.slice(ranks.indexOf(minimumRank) + 1)
+    : ranks;
+
   const divisions: Division[] = ['IV', 'III', 'II', 'I'];
 
-  return ranks.flatMap((rank): RankDivision[] => {
+  return filteredRanks.flatMap((rank): RankDivision[] => {
     // Master, Grandmaster, and Challenger don't have divisions
     if (['MASTER', 'GRANDMASTER', 'CHALLENGER'].includes(rank)) {
       return [

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { generateRankOptions } from '../utils/ranks';
 
-export const serverOptions = ['NA', 'EUW', 'EUE', 'KR'] as const;
+export const serverOptions = ['NA', 'EUW', 'EUN', 'KR', 'BR'] as const;
 
 const rankOptions = generateRankOptions();
 

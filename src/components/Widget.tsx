@@ -63,7 +63,7 @@ const Widget = ({
   const progress = calculateProgress();
 
   return (
-    <div className='flex flex-col items-center w-48 -space-y-4'>
+    <div className='flex flex-col items-center w-48 -space-y-6'>
       <img
         src={`/${stats.tier.toLowerCase()}.webp`}
         alt={`${stats.tier} rank`}
@@ -86,14 +86,20 @@ const Widget = ({
             {winRate}%
           </div>
 
-          <div className='w-full mt-2 mb-1 tracking-wide'>
+          <div className='w-full mt-2 mb-2 tracking-wide'>
             <div className='text-sm text-center'>
-              {progress.toFixed(0)}% to {goalRank} {goalDivision}
+              {progress >= 100
+                ? `${goalRank}${
+                    goalDivision ? ` ${goalDivision}` : ''
+                  } Achieved!`
+                : `${Math.floor(progress)}% to ${goalRank}${
+                    goalDivision ? ` ${goalDivision}` : ''
+                  }`}
             </div>
             <div className='w-full bg-gray-800/60 rounded-full h-1 mt-1'>
               <div
                 className='bg-blue-500 h-1 rounded-full transition-all duration-500'
-                style={{ width: `${progress}%` }}
+                style={{ width: `${Math.min(progress, 100)}%` }}
               />
             </div>
           </div>

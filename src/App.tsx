@@ -11,7 +11,7 @@ const App = () => {
   const [summonerInfo, setSummonerInfo] = useState<SummonerFormData | null>(
     null,
   );
-  const [goalRank, setGoalRank] = useState<Rank>('PLATINUM');
+  const [goalRank, setGoalRank] = useState<Rank>('CHALLENGER');
   const [goalDivision, setGoalDivision] = useState<Division | null>('IV');
   const [error, setError] = useState<FetchError | null>(null);
 
@@ -55,7 +55,7 @@ const App = () => {
   return (
     <div className='min-h-screen bg-gray-900 pt-10 pb-10'>
       <div className='container mx-auto px-4'>
-        <SummonerForm onSubmit={handleSubmit} />
+        <SummonerForm onSubmit={handleSubmit} currentRank={rankedStats?.tier} />
 
         {error === 'summoner_not_found' && (
           <p className='text-red-500 mt-4 text-center'>
