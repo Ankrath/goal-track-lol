@@ -1,27 +1,45 @@
 import { rankedStats } from '../types/summonerData';
 
+export type FetchError = 'summoner_not_found' | 'no_ranked_data';
+
+export type FetchResult = {
+  data: rankedStats | null;
+  error?: FetchError;
+};
+
 export const fetchSummonerData = async (
   summonerName: string,
   tag: string,
   server: string,
-): Promise<rankedStats | null> => {
+): Promise<FetchResult> => {
   try {
     const summonerResponse = await fetch(
       `http://localhost:3001/summoner/${summonerName}/${tag}/${server}`,
     );
     const summonerData = await summonerResponse.json();
 
-    if (summonerData.id) {
-      const rankedResponse = await fetch(
-        `http://localhost:3001/ranked/${summonerData.id}/${server}`,
-      );
-      const rankedData = await rankedResponse.json();
-      return rankedData[0];
+    console.log('summonerData', summonerData);
+
+    if (!summonerData.id) {
+      return { data: null, error: 'summoner_not_found' };
     }
+
+    const rankedResponse = await fetch(
+      `http://localhost:3001/ranked/${summonerData.id}/${server}`,
+    );
+    const rankedData = await rankedResponse.json();
+
+    console.log('rankedData', rankedData);
+
+    if (!rankedData || !rankedData[0]) {
+      return { data: null, error: 'no_ranked_data' };
+    }
+
+    return { data: rankedData[0] };
   } catch (error) {
     console.error('Error fetching summoner data:', error);
+    return { data: null, error: 'summoner_not_found' };
   }
-  return null;
 };
 
 export const setupPolling = async (

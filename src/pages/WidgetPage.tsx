@@ -21,9 +21,9 @@ const WidgetPage = () => {
     const fetchData = async () => {
       if (!summonerName || !tag || !server) return;
 
-      const stats = await fetchSummonerData(summonerName, tag, server);
-      if (stats) {
-        setRankedStats(stats);
+      const result = await fetchSummonerData(summonerName, tag, server);
+      if (result.data) {
+        setRankedStats(result.data);
         setupPolling(summonerName, tag, server, setRankedStats);
       }
     };

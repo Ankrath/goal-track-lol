@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SummonerFormData } from './types/formSchema';
 import { rankedStats, Rank, Division } from './types/summonerData';
-import { fetchSummonerData, setupPolling } from './utils/api';
+import { fetchSummonerData, setupPolling, FetchError } from './utils/api';
 import Widget from './components/Widget';
 import SummonerForm from './components/SummonerForm';
 
@@ -13,21 +13,26 @@ const App = () => {
   );
   const [goalRank, setGoalRank] = useState<Rank>('PLATINUM');
   const [goalDivision, setGoalDivision] = useState<Division | null>('IV');
-
-  console.log('summonerInfo', summonerInfo);
+  const [error, setError] = useState<FetchError | null>(null);
 
   const handleSubmit = async (data: SummonerFormData) => {
+    setError(null);
     setSummonerInfo(data);
-    const stats = await fetchSummonerData(
+
+    const result = await fetchSummonerData(
       data.summonerName,
       data.tag,
       data.server,
     );
 
-    const [rank, division] = data.goalRank.split(' ');
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
 
-    if (stats) {
-      setRankedStats(stats);
+    if (result.data) {
+      const [rank, division] = data.goalRank.split(' ');
+      setRankedStats(result.data);
       setupPolling(data.summonerName, data.tag, data.server, setRankedStats);
       setGoalRank(rank as Rank);
       setGoalDivision((division as Division) || null);
@@ -52,7 +57,19 @@ const App = () => {
       <div className='container mx-auto px-4'>
         <SummonerForm onSubmit={handleSubmit} />
 
-        {summonerInfo && rankedStats && (
+        {error === 'summoner_not_found' && (
+          <p className='text-red-500 mt-4 text-center'>
+            Summoner not found. Please check the name and try again.
+          </p>
+        )}
+
+        {error === 'no_ranked_data' && (
+          <p className='text-red-500 mt-4 text-center'>
+            This summoner hasn't played enough ranked games this season.
+          </p>
+        )}
+
+        {!error && summonerInfo && rankedStats && (
           <div className='space-y-6'>
             <div className='flex justify-center'>
               <Widget

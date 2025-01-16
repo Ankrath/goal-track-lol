@@ -1,4 +1,3 @@
-import React from 'react';
 import { Rank, Division, rankedStats } from '../types/summonerData';
 
 const rankOrder: Record<Rank, number> = {
