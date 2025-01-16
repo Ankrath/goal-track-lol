@@ -6,8 +6,11 @@ export type RankDivision = {
   label: string;
 };
 
-export const generateRankOptions = (minimumRank?: Rank): RankDivision[] => {
+export const generateRankOptions = (): RankDivision[] => {
   const ranks: Rank[] = [
+    'IRON',
+    'BRONZE',
+    'SILVER',
     'GOLD',
     'PLATINUM',
     'EMERALD',
@@ -17,10 +20,8 @@ export const generateRankOptions = (minimumRank?: Rank): RankDivision[] => {
     'CHALLENGER',
   ];
 
-  // Filter out ranks below it as well as the current rank
-  const filteredRanks = minimumRank
-    ? ranks.slice(ranks.indexOf(minimumRank))
-    : ranks;
+  // Start from Gold, removing Iron, Bronze, and Silver
+  const filteredRanks = ranks.slice(ranks.indexOf('GOLD'));
 
   const divisions: Division[] = ['IV', 'III', 'II', 'I'];
 

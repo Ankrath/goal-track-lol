@@ -1,22 +1,23 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
+import { BiLoaderAlt } from 'react-icons/bi';
 import {
   SummonerFormData,
   summonerFormSchema,
   serverOptions,
 } from '../types/formSchema';
 import { generateRankOptions } from '../utils/ranks';
-import { Rank } from '../types/summonerData';
 
 type SummonerFormProps = {
-  onSubmit: (data: SummonerFormData) => void;
-  currentRank?: Rank;
+  onSubmit: (data: SummonerFormData) => Promise<void>;
 };
 
-const SummonerForm = ({ onSubmit, currentRank }: SummonerFormProps) => {
-  const [isTracked, setIsTracked] = useState(false);
-  const rankOptions = generateRankOptions(currentRank);
+const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
+  const [formState, setFormState] = useState<'idle' | 'loading' | 'success'>(
+    'idle',
+  );
+  const rankOptions = generateRankOptions();
 
   const {
     register,
@@ -31,17 +32,40 @@ const SummonerForm = ({ onSubmit, currentRank }: SummonerFormProps) => {
   });
 
   const handleFormSubmit = async (data: SummonerFormData) => {
-    setIsTracked(true);
-    onSubmit(data);
+    setFormState('loading');
 
-    // Reset after 3 seconds
-    setTimeout(() => {
-      setIsTracked(false);
-    }, 3000);
+    try {
+      await onSubmit(data);
+      setFormState('success');
+
+      // Reset after 3 seconds, but only after success
+      setTimeout(() => {
+        setFormState('idle');
+      }, 3000);
+    } catch (error) {
+      console.error(error);
+      setFormState('idle');
+    }
+  };
+
+  const getButtonContent = () => {
+    switch (formState) {
+      case 'loading':
+        return (
+          <div className='flex items-center justify-center gap-2'>
+            <BiLoaderAlt className='w-5 h-5 animate-spin' />
+            <span>Tracking...</span>
+          </div>
+        );
+      case 'success':
+        return 'Tracked!';
+      default:
+        return 'Track Player';
+    }
   };
 
   return (
-    <div className=' bg-[#111827] pb-8'>
+    <div className='bg-[#111827] pb-8'>
       <div className='container mx-auto px-4'>
         <div className='max-w-2xl mx-auto'>
           <div className='p-8 bg-gray-800/50 backdrop-blur border border-gray-700 rounded-xl shadow-xl'>
@@ -129,14 +153,16 @@ const SummonerForm = ({ onSubmit, currentRank }: SummonerFormProps) => {
 
               <button
                 type='submit'
-                disabled={isTracked}
+                disabled={formState !== 'idle'}
                 className={`w-full p-3 mt-6 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-300 ${
-                  isTracked
+                  formState === 'success'
                     ? 'bg-emerald-600 text-white cursor-not-allowed'
+                    : formState === 'loading'
+                    ? 'bg-blue-600 text-white cursor-not-allowed'
                     : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white'
                 }`}
               >
-                {isTracked ? 'Tracked!' : 'Track Player'}
+                {getButtonContent()}
               </button>
             </form>
           </div>

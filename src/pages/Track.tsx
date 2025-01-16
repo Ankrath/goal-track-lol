@@ -56,7 +56,7 @@ const Track = () => {
   return (
     <div className='min-h-screen bg-gray-900 pt-10 pb-10'>
       <div className='container mx-auto px-4'>
-        <SummonerForm onSubmit={handleSubmit} currentRank={rankedStats?.tier} />
+        <SummonerForm onSubmit={handleSubmit} />
 
         {error === 'summoner_not_found' && (
           <p className='text-red-500 mt-4 text-center'>

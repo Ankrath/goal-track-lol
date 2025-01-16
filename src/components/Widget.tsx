@@ -101,7 +101,7 @@ const Widget = ({
                 className={`${
                   progress >= 100
                     ? 'bg-green-500'
-                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600'
                 } h-1 rounded-full transition-all duration-500`}
                 style={{ width: `${Math.min(progress, 100)}%` }}
               />
