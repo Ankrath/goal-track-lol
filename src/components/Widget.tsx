@@ -98,7 +98,11 @@ const Widget = ({
             </div>
             <div className='w-full bg-gray-800/60 rounded-full h-1 mt-1'>
               <div
-                className='bg-blue-500 h-1 rounded-full transition-all duration-500'
+                className={`${
+                  progress >= 100
+                    ? 'bg-green-500'
+                    : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700'
+                } h-1 rounded-full transition-all duration-500`}
                 style={{ width: `${Math.min(progress, 100)}%` }}
               />
             </div>

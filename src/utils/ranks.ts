@@ -19,7 +19,7 @@ export const generateRankOptions = (minimumRank?: Rank): RankDivision[] => {
 
   // Filter out ranks below it as well as the current rank
   const filteredRanks = minimumRank
-    ? ranks.slice(ranks.indexOf(minimumRank) + 1)
+    ? ranks.slice(ranks.indexOf(minimumRank))
     : ranks;
 
   const divisions: Division[] = ['IV', 'III', 'II', 'I'];

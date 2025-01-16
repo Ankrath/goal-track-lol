@@ -31,11 +31,20 @@ export const fetchSummonerData = async (
 
     console.log('rankedData', rankedData);
 
-    if (!rankedData || !rankedData[0]) {
+    if (!rankedData || !rankedData.length) {
       return { data: null, error: 'no_ranked_data' };
     }
 
-    return { data: rankedData[0] };
+    // Find solo queue ranked data
+    const soloQueueData = rankedData.find(
+      (queue: rankedStats) => queue.queueType === 'RANKED_SOLO_5x5',
+    );
+
+    if (!soloQueueData) {
+      return { data: null, error: 'no_ranked_data' };
+    }
+
+    return { data: soloQueueData };
   } catch (error) {
     console.error('Error fetching summoner data:', error);
     return { data: null, error: 'summoner_not_found' };
@@ -67,7 +76,15 @@ export const setupPolling = async (
           `http://localhost:3001/ranked/${summonerData.id}/${server}`,
         );
         const rankedData = await rankedResponse.json();
-        onUpdate(rankedData[0]);
+
+        // Find solo queue ranked data
+        const soloQueueData = rankedData.find(
+          (queue: rankedStats) => queue.queueType === 'RANKED_SOLO_5x5',
+        );
+
+        if (soloQueueData) {
+          onUpdate(soloQueueData);
+        }
 
         return gameData.inGame ? 5 * 60 * 1000 : 15 * 60 * 1000;
       } catch (error) {

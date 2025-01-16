@@ -18,4 +18,5 @@ export type rankedStats = {
   tier: Rank;
   rank: Division;
   leaguePoints: number;
+  queueType: string;
 };
