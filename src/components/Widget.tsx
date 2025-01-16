@@ -71,7 +71,7 @@ const Widget = ({
         className='w-42 h-42 object-contain'
       />
 
-      <div className='tracking-wider font-bold antialiased w-full relative text-neutral-100 [text-shadow:_1px_1px_0_rgb(0_0_0_/_60%),_-1px_-1px_0_rgb(0_0_0_/_60%),_1px_-1px_0_rgb(0_0_0_/_60%),_-1px_1px_0_rgb(0_0_0_/_60%)]'>
+      <div className='tracking-wider font-bold antialiased w-full relative text-white [text-shadow:_1px_1px_0_rgb(0_0_0_/_100%),_-1px_-1px_0_rgb(0_0_0_/_100%),_1px_-1px_0_rgb(0_0_0_/_100%),_-1px_1px_0_rgb(0_0_0_/_100%)]'>
         <div className='px-3'>
           <div className='text-lg text-center'>
             {summonerName || 'Summoner'}
@@ -87,13 +87,13 @@ const Widget = ({
             {winRate}%
           </div>
 
-          <div className='w-full mt-2 mb-1 tracking-normal'>
+          <div className='w-full mt-2 mb-1 tracking-wide'>
             <div className='text-sm text-center'>
               {progress.toFixed(0)}% to {goalRank} {goalDivision}
             </div>
-            <div className='w-full bg-gray-800/50 rounded-full h-1 mt-1'>
+            <div className='w-full bg-gray-800/60 rounded-full h-1 mt-1'>
               <div
-                className='bg-green-500 h-1 rounded-full transition-all duration-500'
+                className='bg-blue-500 h-1 rounded-full transition-all duration-500'
                 style={{ width: `${progress}%` }}
               />
             </div>
