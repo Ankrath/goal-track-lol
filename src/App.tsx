@@ -14,6 +14,8 @@ const App = () => {
   const [goalRank, setGoalRank] = useState<Rank>('PLATINUM');
   const [goalDivision, setGoalDivision] = useState<Division | null>('IV');
 
+  console.log('summonerInfo', summonerInfo);
+
   const handleSubmit = async (data: SummonerFormData) => {
     setSummonerInfo(data);
     const stats = await fetchSummonerData(
@@ -46,22 +48,23 @@ const App = () => {
   };
 
   return (
-    <div className='min-h-screen bg-gray-900 pt-10'>
+    <div className='min-h-screen bg-gray-900 pt-10 pb-10'>
       <div className='container mx-auto px-4'>
         <SummonerForm onSubmit={handleSubmit} />
 
-        {rankedStats && (
-          <div className='mt-8 space-y-6'>
+        {summonerInfo && rankedStats && (
+          <div className='space-y-6'>
             <div className='flex justify-center'>
               <Widget
                 stats={rankedStats}
                 goalRank={goalRank}
                 goalDivision={goalDivision}
+                summonerName={summonerInfo.summonerName}
               />
             </div>
 
-            <div className='flex flex-col items-center space-y-4'>
-              <p className='text-gray-300'>Widget URL:</p>
+            <div className='flex flex-col items-center space-y-4 pt-4'>
+              <p className='text-gray-300 font-bold'>Widget URL</p>
               <div className='flex items-center gap-4'>
                 <input
                   type='text'

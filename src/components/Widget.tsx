@@ -1,3 +1,4 @@
+import React from 'react';
 import { Rank, Division, rankedStats } from '../types/summonerData';
 
 const rankOrder: Record<Rank, number> = {
@@ -24,14 +25,18 @@ type WidgetProps = {
   stats: rankedStats;
   goalRank: Rank;
   goalDivision: Division | null;
+  summonerName: string;
 };
 
-const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
-  console.log('stats', stats);
-
+const Widget = ({
+  stats,
+  goalRank,
+  goalDivision,
+  summonerName,
+}: WidgetProps) => {
   const winRate =
     stats?.wins && stats?.losses
-      ? ((stats.wins / (stats.wins + stats.losses)) * 100).toFixed(1)
+      ? ((stats.wins / (stats.wins + stats.losses)) * 100).toFixed(0)
       : '0';
 
   const calculateProgress = () => {
@@ -40,12 +45,10 @@ const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
     const currentRankValue = rankOrder[stats.tier];
     const goalRankValue = rankOrder[goalRank];
 
-    // If the goal rank is Master or above, we only compare ranks
     if (['MASTER', 'GRANDMASTER', 'CHALLENGER'].includes(goalRank)) {
       return (currentRankValue / goalRankValue) * 100;
     }
 
-    // For other ranks, we include divisions in the calculation
     const currentDivisionValue = divisionOrder[stats.rank];
     const goalDivisionValue = goalDivision ? divisionOrder[goalDivision] : 0;
 
@@ -61,32 +64,40 @@ const Widget = ({ stats, goalRank, goalDivision }: WidgetProps) => {
   const progress = calculateProgress();
 
   return (
-    <div className='w-96 text-white rounded-lg shadow-lg bg-gray-800/70'>
-      <div className='p-4'>
-        <div className='flex gap-4 mb-4'>
-          <div className='w-12 h-12 bg-gray-700 rounded-md flex items-center justify-center'>
-            <span className='text-gray-300'>Rank</span>
+    <div className='flex flex-col items-center w-48 -space-y-4'>
+      <img
+        src={`/${stats.tier.toLowerCase()}.webp`}
+        alt={`${stats.tier} rank`}
+        className='w-42 h-42 object-contain'
+      />
+
+      <div className='tracking-wider font-bold antialiased w-full relative text-neutral-100 [text-shadow:_1px_1px_0_rgb(0_0_0_/_60%),_-1px_-1px_0_rgb(0_0_0_/_60%),_1px_-1px_0_rgb(0_0_0_/_60%),_-1px_1px_0_rgb(0_0_0_/_60%)]'>
+        <div className='px-3'>
+          <div className='text-lg text-center'>
+            {summonerName || 'Summoner'}
           </div>
 
-          <div>
-            <div className='text-lg font-bold leading-tight text-gray-100'>
-              {stats?.tier} {stats?.rank} {stats?.leaguePoints}LP
-            </div>
+          <div className='text-center mt-0.5'>
+            {stats?.tier} {stats?.rank} {stats?.leaguePoints}LP
+          </div>
 
-            <div className='text-sm text-gray-300'>
-              W: {stats?.wins || 0} L: {stats?.losses || 0} WR: {winRate}%
+          <div className='text-center mt-0.5'>
+            <span className='text-green-500'>{stats?.wins || 0}W</span>{' '}
+            <span className='text-red-500'>{stats?.losses || 0}L</span>{' '}
+            {winRate}%
+          </div>
+
+          <div className='w-full mt-2 mb-1 tracking-normal'>
+            <div className='text-sm text-center'>
+              {progress.toFixed(0)}% to {goalRank} {goalDivision}
+            </div>
+            <div className='w-full bg-gray-800/50 rounded-full h-1 mt-1'>
+              <div
+                className='bg-green-500 h-1 rounded-full transition-all duration-500'
+                style={{ width: `${progress}%` }}
+              />
             </div>
           </div>
-        </div>
-
-        <div className='text-sm text-gray-400 mb-2'>
-          Road to {goalRank} {goalDivision} ({progress.toFixed(1)}%)
-        </div>
-        <div className='w-full bg-gray-700 rounded-full h-1.5'>
-          <div
-            className='bg-blue-500 h-1.5 rounded-full transition-all duration-500'
-            style={{ width: `${progress}%` }}
-          ></div>
         </div>
       </div>
     </div>

@@ -36,13 +36,12 @@ const WidgetPage = () => {
   }
 
   return (
-    <div style={{ background: 'transparent' }}>
-      <Widget
-        stats={rankedStats}
-        goalRank={goalRank}
-        goalDivision={goalDivision}
-      />
-    </div>
+    <Widget
+      stats={rankedStats}
+      goalRank={goalRank}
+      goalDivision={goalDivision}
+      summonerName={summonerName}
+    />
   );
 };
 
