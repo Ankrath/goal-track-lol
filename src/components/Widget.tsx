@@ -77,7 +77,10 @@ const Widget = ({
           </div>
 
           <div className='text-center mt-1 text-lg'>
-            {stats?.tier} {stats?.rank} {stats?.leaguePoints}LP
+            {stats.tier}
+            {!['MASTER', 'GRANDMASTER', 'CHALLENGER'].includes(stats.tier) &&
+              ` ${stats.rank}`}
+            {` ${stats.leaguePoints}LP`}
           </div>
 
           <div className='text-center mt-0.5 text-lg'>

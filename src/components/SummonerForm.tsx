@@ -118,8 +118,12 @@ const SummonerForm = ({ onSubmit }: SummonerFormProps) => {
                   className='w-full p-3 bg-gray-900/50 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200'
                 >
                   {serverOptions.map(server => (
-                    <option key={server} value={server} className='bg-gray-900'>
-                      {server}
+                    <option
+                      key={server.value}
+                      value={server.value}
+                      className='bg-gray-900'
+                    >
+                      {server.name}
                     </option>
                   ))}
                 </select>
