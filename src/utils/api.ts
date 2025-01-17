@@ -1,3 +1,4 @@
+import config from '../config';
 import { rankedStats } from '../types/summonerData';
 
 export type FetchError = 'summoner_not_found' | 'no_ranked_data';
@@ -14,7 +15,7 @@ export const fetchSummonerData = async (
 ): Promise<FetchResult> => {
   try {
     const summonerResponse = await fetch(
-      `http://localhost:3001/summoner/${summonerName}/${tag}/${server}`,
+      `${config.apiUrl}/summoner/${summonerName}/${tag}/${server}`,
     );
     const summonerData = await summonerResponse.json();
 
@@ -25,7 +26,7 @@ export const fetchSummonerData = async (
     }
 
     const rankedResponse = await fetch(
-      `http://localhost:3001/ranked/${summonerData.id}/${server}`,
+      `${config.apiUrl}/ranked/${summonerData.id}/${server}`,
     );
     const rankedData = await rankedResponse.json();
 
@@ -59,7 +60,7 @@ export const setupPolling = async (
 ) => {
   try {
     const summonerResponse = await fetch(
-      `http://localhost:3001/summoner/${summonerName}/${tag}/${server}`,
+      `${config.apiUrl}/summoner/${summonerName}/${tag}/${server}`,
     );
     const summonerData = await summonerResponse.json();
 
@@ -68,12 +69,12 @@ export const setupPolling = async (
     const fetchUpdates = async () => {
       try {
         const gameResponse = await fetch(
-          `http://localhost:3001/active-game/${summonerData.puuid}/${server}`,
+          `${config.apiUrl}/active-game/${summonerData.puuid}/${server}`,
         );
         const gameData = await gameResponse.json();
 
         const rankedResponse = await fetch(
-          `http://localhost:3001/ranked/${summonerData.id}/${server}`,
+          `${config.apiUrl}/ranked/${summonerData.id}/${server}`,
         );
         const rankedData = await rankedResponse.json();
 
