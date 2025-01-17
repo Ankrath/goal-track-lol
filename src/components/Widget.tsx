@@ -63,31 +63,31 @@ const Widget = ({
   const progress = calculateProgress();
 
   return (
-    <div className='flex flex-col items-center w-48 -space-y-6'>
+    <div className='flex flex-col items-center w-52 -space-y-6'>
       <img
         src={`/${stats.tier.toLowerCase()}.webp`}
         alt={`${stats.tier} rank`}
-        className='w-42 h-42 object-contain'
+        className='w-52 h-52 object-contain'
       />
 
       <div className='tracking-wider font-bold antialiased w-full relative text-white [text-shadow:_1px_1px_0_rgb(0_0_0_/_100%),_-1px_-1px_0_rgb(0_0_0_/_100%),_1px_-1px_0_rgb(0_0_0_/_100%),_-1px_1px_0_rgb(0_0_0_/_100%)]'>
-        <div className='px-3'>
-          <div className='text-lg text-center'>
+        <div className='px-2'>
+          <div className='text-xl text-center'>
             {summonerName || 'Summoner'}
           </div>
 
-          <div className='text-center mt-0.5'>
+          <div className='text-center mt-1 text-lg'>
             {stats?.tier} {stats?.rank} {stats?.leaguePoints}LP
           </div>
 
-          <div className='text-center mt-0.5'>
+          <div className='text-center mt-0.5 text-lg'>
             <span className='text-green-500'>{stats?.wins || 0}W</span>{' '}
             <span className='text-red-500'>{stats?.losses || 0}L</span>{' '}
             {winRate}%
           </div>
 
           <div className='w-full mt-2 mb-2 tracking-wide'>
-            <div className='text-sm text-center'>
+            <div className='text-center'>
               {progress >= 100
                 ? `${goalRank}${
                     goalDivision ? ` ${goalDivision}` : ''
@@ -96,13 +96,13 @@ const Widget = ({
                     goalDivision ? ` ${goalDivision}` : ''
                   }`}
             </div>
-            <div className='w-full bg-gray-800/60 rounded-full h-1 mt-1'>
+            <div className='w-full bg-gray-800/60 rounded-full h-1.5 mt-1'>
               <div
                 className={`${
                   progress >= 100
                     ? 'bg-green-500'
                     : 'bg-gradient-to-r from-blue-600 to-purple-600'
-                } h-1 rounded-full transition-all duration-500`}
+                } h-1.5 rounded-full transition-all duration-500`}
                 style={{ width: `${Math.min(progress, 100)}%` }}
               />
             </div>

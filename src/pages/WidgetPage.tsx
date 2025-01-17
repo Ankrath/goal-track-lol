@@ -36,12 +36,16 @@ const WidgetPage = () => {
   }
 
   return (
-    <Widget
-      stats={rankedStats}
-      goalRank={goalRank}
-      goalDivision={goalDivision}
-      summonerName={summonerName}
-    />
+    <div className='fixed inset-0 flex items-center justify-center pointer-events-none'>
+      <div className='pointer-events-auto'>
+        <Widget
+          stats={rankedStats}
+          goalRank={goalRank}
+          goalDivision={goalDivision}
+          summonerName={summonerName}
+        />
+      </div>
+    </div>
   );
 };
 
