@@ -49,7 +49,7 @@ const cache = new NodeCache({
 const CACHE_DURATIONS = {
   summoner: 3600,
   ranked: 300,
-  activeGame: 120,
+  activeGame: 300,
 };
 
 const getRiotData = async (cacheKey, ttl, apiCall) => {
